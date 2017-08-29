@@ -138,7 +138,6 @@ def register_for_game():
         player_id=data['player_id'],
         game_id=data['game_id'])
 
-    # Stores note in database.
     signup.put()
 
     return 'OK', 200
@@ -165,13 +164,10 @@ def add_game():
 
     data = request.get_json()
     date = datetime.strptime(data['date'], '%b %d %Y %I:%M%p')
-    # Populates note properties according to the model,
-    # with the user ID as the key name.
     game = Game(
         location=data['location'],
         date=date)
 
-    # Stores note in database.
     game.put()
 
     return 'OK', 200
