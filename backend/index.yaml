@@ -10,13 +10,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-- kind: Note
-  ancestor: yes
+- kind: Signup
   properties:
-  - name: created
+  - name: game_id
+  - name: created)
 
-- kind: Note
-  ancestor: yes
+- kind: Signup
   properties:
+  - name: game_id
   - name: created
-    direction: desc
