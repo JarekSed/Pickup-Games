@@ -7,6 +7,8 @@ Licensed under the Apache License, Version 2.0 (the "License");
 <html>
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
@@ -14,6 +16,8 @@ Licensed under the Apache License, Version 2.0 (the "License");
   <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/live/1.0/firebase-ui-auth.css">
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="/main.js"></script>
+	<link rel="stylesheet" type="text/css" href="/jquery.datetimepicker.css"/ >
+	<script src="/jquery.datetimepicker.full.min.js"></script>
   <title>Austin Pickup Basketball</title>
 </head>
 <body>
@@ -28,7 +32,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 		<div id="form">
 			<form action="" method="post">
 				<div class="form-group">
-					<button id="add-game">Add Game</button>
+          <button id="add-game">Add Game</button>
 					<button id="sign-out">Sign out</button>
 				</div>
 			</form>
@@ -36,5 +40,22 @@ Licensed under the Apache License, Version 2.0 (the "License");
     <h3>See available games:</h3>
     <div id="games-container"></div>
   </div>
+
+
+	<div id="dialog-form" title="Create new user">
+  <p class="validateTips">All form fields are required.</p>
+
+		<form>
+			<fieldset>
+				<label for="location">Location</label>
+				<input type="text" name="location" id="location" value="Austin Rec Center" class="text ui-widget-content ui-corner-all">
+				<label for="date">Date and Time</label>
+			  <input id="datetimepicker" name="datetimepicker" type="text" >
+				<!-- Allow form submission with keyboard without duplicating the dialog button -->
+				<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+			</fieldset>
+		</form>
+	</div>
 </body>
+
 </html>

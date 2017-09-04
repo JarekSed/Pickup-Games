@@ -17,7 +17,9 @@ $(function(){
   // deploying the application to a live production environment, change to
   // https://backend-dot-<PROJECT_ID>.appspot.com as specified in the
   // backend's app.yaml file.
+
   var backendHostUrl = 'https://backend-dot-pickup-basketball.appspot.com';
+  //var backendHostUrl = 'http://localhost:8081';
 
   // Initialize Firebase
   var config = {
@@ -155,25 +157,89 @@ $(function(){
     });
   });
 
-  // Create a game
-  var createGameBtn = $('#add-game');
-  createGameBtn.click(function(event) {
-    event.preventDefault();
-    $.ajax(backendHostUrl + '/games', {
+	// Create game functions
+  gameLocation = $( "#location" ),
+  date = $( "#datetimepicker" ),
+  allFields = $( [] ).add( gameLocation).add( date),
+  tips = $( ".validateTips" );
+
+	function updateTips( t ) {
+		tips
+			.text( t )
+			.addClass( "ui-state-highlight" );
+		setTimeout(function() {
+				tips.removeClass( "ui-state-highlight", 1500 );
+				}, 500 );
+	}
+
+	function checkEmpty( o, n) {
+		if ( o.val().length <= 0 ) {
+			o.addClass( "ui-state-error" );
+			updateTips( n + " must be set.");
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+
+	function addGame() {
+		var valid = true;
+		allFields.removeClass( "ui-state-error" );
+
+		valid = valid && checkEmpty( gameLocation, "Location");
+		valid = valid && checkEmpty( date, "Date and Time");
+
+		if ( valid ) {
+			$.ajax(backendHostUrl + '/games', {
       headers: {
         'Authorization': 'Bearer ' + userIdToken
       },
       method: 'POST',
-      data: JSON.stringify({'location': 'Austin Rec Center', 'date': 'Jun 1 2017 9:24AM'}),
+      data: JSON.stringify({'location': gameLocation.val(), 'date': date.val()}),
       contentType : 'application/json'
-    }).then(function(){
-      // Refresh games list.
-      fetchGames();
+			}).then(function(){
+				// Refresh games list.
+				fetchGames();
+			});
+			dialog.dialog( "close" );
+      fetchGames()
+		}
+		return valid;
+	}
+
+	dialog = $( "#dialog-form" ).dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Create a game": addGame,
+        Cancel: function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+        form[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+      }
     });
 
-  });
+    form = dialog.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault();
+      addGame();
+    });
+
+    $( "#add-game" ).button().on( "click", function() {
+      dialog.dialog( "open" );
+	    return false;
+    });
 
   configureFirebaseLogin();
   configureFirebaseLoginWidget();
+	$('#datetimepicker').datetimepicker({
+		format:'d M Y h:i a',
+		step: 30,
+	});
 
 });

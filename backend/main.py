@@ -116,7 +116,6 @@ def register_for_game():
 
         }
     """
-    print 'register called!'
     # Verify Firebase auth.
     id_token = request.headers['Authorization'].split(' ').pop()
     claims = google.oauth2.id_token.verify_firebase_token(
@@ -150,11 +149,10 @@ def add_game():
 
         {
             "location": "that one building.",
-            "date": "Jun 1 2017 9:24M",
+            "date": "Jun 1 2017 9:24PM",
 
         }
     """
-
     # Verify Firebase auth.
     id_token = request.headers['Authorization'].split(' ').pop()
     claims = google.oauth2.id_token.verify_firebase_token(
@@ -163,7 +161,7 @@ def add_game():
         return 'Unauthorized', 401
 
     data = request.get_json()
-    date = datetime.strptime(data['date'], '%b %d %Y %I:%M%p')
+    date = datetime.strptime(data['date'], '%d %b %Y %I:%M %p')
     game = Game(
         location=data['location'],
         date=date)
