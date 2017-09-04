@@ -18,8 +18,8 @@ $(function(){
   // https://backend-dot-<PROJECT_ID>.appspot.com as specified in the
   // backend's app.yaml file.
 
-  var backendHostUrl = 'https://backend-dot-pickup-basketball.appspot.com';
-  //var backendHostUrl = 'http://localhost:8081';
+  //var backendHostUrl = 'https://backend-dot-pickup-basketball.appspot.com';
+  var backendHostUrl = 'http://localhost:8081';
 
   // Initialize Firebase
   var config = {
@@ -98,15 +98,45 @@ $(function(){
       // Iterate over user data to display games from database.
       data.forEach(function(game){
         var $wrapper = $("<div/>", { class: "game" });
-        $text = "Created: " + game.created + "<br/> Registered Players: <table>"
+        $text = "Created: " + game.created + " by " + game.creator + "<br/> Registered Players: <table>"
         game.players.forEach(function(player){
           $text += "<tr><td>" + player.id + "</td></tr>"
         });
         $text += "</table>"
         $wrapper.append($('<p>')).html("<h2>"+ game.date + " -- " + game.location +"</h2>"+$text);
         $('#games-container').append($wrapper);
+
+      	// Create button to delete this game.
+				$deleteBtn= $('<button/>').text('Delete this game');
+        $deleteBtn.addClass("ui-button ui-corner-all ui-widget");
+			  $wrapper.append($deleteBtn);
+				$deleteBtn.click(function(event) {
+					event.preventDefault();
+          if ( confirm('Are you sure you want to delete this game? This cannot be undone!')) {
+            $.ajax(backendHostUrl + '/delete_game', {
+              headers: {
+                'Authorization': 'Bearer ' + userIdToken
+              },
+              method: 'POST',
+              data: JSON.stringify({'game_id': game.id}),
+              contentType : 'application/json',
+              error :  function(_, textStatus, errorThrown ) {
+                alert('Error: ' + textStatus + ': ' + errorThrown);
+              },
+              success : function (_, _, _) {
+                alert('Game deleted');
+              }
+            }).then(function(){
+              // Refresh games list.
+              fetchGames();
+            });
+          }
+				});
+
+
 				// Create button to register for this game.
 				$registerBtn = $('<button/>').text('Register');
+        $registerBtn.addClass("ui-button ui-corner-all ui-widget");
 			  $wrapper.append($registerBtn);
 				$registerBtn.click(function(event) {
 					event.preventDefault();
@@ -115,6 +145,9 @@ $(function(){
 							'Authorization': 'Bearer ' + userIdToken
 						},
 						method: 'POST',
+            error :  function(_, textStatus, errorThrown ) {
+              alert('Error: ' + textStatus + ': ' + errorThrown);
+            },
 						data: JSON.stringify({'game_id': game.id, 'player_id': userName}),
 						contentType : 'application/json'
 					}).then(function(){
@@ -124,6 +157,7 @@ $(function(){
 				});
 				// Create button to unregister for this game.
 				$unRegisterBtn = $('<button/>').text('Unregister');
+        $unRegisterBtn.addClass("ui-button ui-corner-all ui-widget");
 			  $wrapper.append($unRegisterBtn);
 				$unRegisterBtn.click(function(event) {
 					event.preventDefault();
@@ -132,6 +166,9 @@ $(function(){
 							'Authorization': 'Bearer ' + userIdToken
 						},
 						method: 'POST',
+            error :  function(_, textStatus, errorThrown ) {
+              alert('Error: ' + textStatus + ': ' + errorThrown);
+            },
 						data: JSON.stringify({'game_id': game.id, 'player_id': userName}),
 						contentType : 'application/json'
 					}).then(function(){
@@ -191,11 +228,14 @@ $(function(){
 		valid = valid && checkEmpty( date, "Date and Time");
 
 		if ( valid ) {
-			$.ajax(backendHostUrl + '/games', {
+			$.ajax(backendHostUrl + '/add_game', {
       headers: {
         'Authorization': 'Bearer ' + userIdToken
       },
       method: 'POST',
+      error :  function(_, textStatus, errorThrown ) {
+        alert('Error: ' + textStatus + ': ' + errorThrown);
+      },
       data: JSON.stringify({'location': gameLocation.val(), 'date': date.val()}),
       contentType : 'application/json'
 			}).then(function(){
