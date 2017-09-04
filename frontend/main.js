@@ -18,8 +18,8 @@ $(function(){
   // https://backend-dot-<PROJECT_ID>.appspot.com as specified in the
   // backend's app.yaml file.
 
-  //var backendHostUrl = 'https://backend-dot-pickup-basketball.appspot.com';
-  var backendHostUrl = 'http://localhost:8081';
+  var backendHostUrl = 'https://backend-dot-pickup-basketball.appspot.com';
+  //var backendHostUrl = 'http://localhost:8081';
 
   // Initialize Firebase
   var config = {
