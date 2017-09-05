@@ -46,7 +46,7 @@ textarea {
 .game {
     opacity:1.5;
     width: 660px;
-	  margin: auto;
+	margin: auto;
     background:rgba(0,0,0,0.25);
     border: 5px;
     border-radius: 10px;
